@@ -1,4 +1,4 @@
-application: gae-tornado-template
+application: getmailapp
 version: 1
 runtime: python
 api_version: 1
@@ -13,3 +13,6 @@ handlers:
 builtins:
 - datastore_admin: on
 - appstats: on
+
+inbound_services:
+- mail
