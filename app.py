@@ -69,6 +69,13 @@ class InboundHandler(BaseHandler):
     message = mail.InboundEmailMessage(self.request.body)
     logging.info('%s' % message)
 
+class OutboundHandler(BaseHandler):
+  def initialize(self):
+    self.application.settings['xsrf_token'] = False
+
+  def post(self):
+    pass
+
 
 def main():
   run_wsgi_app(Application())

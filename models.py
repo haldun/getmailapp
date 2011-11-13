@@ -20,3 +20,4 @@ class Message(db.Model):
   address = db.ReferenceProperty(Address, collection_name='messages')
   raw_contents = db.TextProperty()
   created_at = db.DateTimeProperty(auto_now_add=True)
+
