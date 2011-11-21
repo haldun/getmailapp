@@ -32,6 +32,7 @@ class Application(tornado.wsgi.WSGIApplication):
       url(r'/addresses/new', NewAddressHandler, name='new_address'),
       url(r'/addresses/edit', EditAddressHandler, name='edit_address'),
       url(r'/addresses/delete', DeleteAddressHandler, name='delete_address'),
+      url(r'/addresses/([^/]+)/messages', ListMessagesHandlers, name='messages'),
 
       # Inbound
       (r'/_ah/mail/.+', InboundHandler),
@@ -199,6 +200,14 @@ class TransmitMessageHandler(TaskHandler):
       else:
         message.status = models.MessageState.FAILED
     message.put()
+
+class ListMessagesHandlers(BaseHandler):
+  @tornado.web.authenticated
+  def get(self, id=None):
+    address = models.Address.get_by_id(int(id))
+    if address.account.key() != self.current_account.key():
+      raise tornado.web.HTTPError(403)
+    self.render("list_messages.html", address=address, messages=address.messages)
 
 
 def main():
