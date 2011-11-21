@@ -1,4 +1,40 @@
-<form action="" method="post">
-  {% module Form(form) %}
-  <input type="submit" value="Create">
-</form>
+{% extends "base.html" %}
+
+{% block content %}
+<div class="content">
+  <div class="page-header row">
+    <h1 class="pull-left">New Address</h1>
+  </div>
+  <div class="span12">
+    <form action="" method="post" class="form-stacked">
+      {% raw xsrf_form_html() %}
+      <div class="clearfix {%if form.callback_url.errors %}error{% end %}">
+        <div class="input">
+          {% raw form.address.label() %}
+          {% raw form.address() %} @getmailapp.com
+          {% if form.address.errors %}
+            {% for error in form.address.errors %}
+              <span class="help-inline">{{ error }}</span>
+            {% end %}
+          {% end %}
+        </div>
+      </div>
+      <div class="clearfix {%if form.callback_url.errors %}error{% end %}">
+        <div class="input">
+          {% raw form.callback_url.label() %}
+          http:// {% raw form.callback_url() %}
+          {% if form.callback_url.errors %}
+            {% for error in form.callback_url.errors %}
+              <span class="help-inline">{{ error }}</span>
+            {% end %}
+          {% end %}
+        </div>
+      </div>
+      <div class="actions">
+        <input type="submit" value="Create" class="btn primary">
+      </div>
+    </form>
+  </div>
+</div>
+
+{% end %}

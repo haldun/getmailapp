@@ -1,26 +1,36 @@
-<h1>Listing Addresses</h1>
+{% extends "base.html" %}
 
-<table>
-  <thead>
-    <tr>
-      <th>Address</th>
-      <th>Callback url</th>
-      <th>Token</th>
-      <th></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    {% for address in addresses %}
+{% block content %}
+<div class="content">
+  <div class="page-header row">
+    <h1 class="pull-left">Your addresses</h1>
+    <a href="{{ reverse_url('new_address') }}" class="btn large success pull-right">+ Create Address</a>
+  </div>
+  <div>
+  <table>
+    <thead>
       <tr>
-        <td>{{ address.address }}</td>
-        <td>{{ address.callback_url }}</td>
-        <td>{{ address.token }}</td>
-        <td>
-          <a href="{{ reverse_url('edit_address') }}?id={{ address.key().id() }}">Edit</a>
-          <a href="{{ reverse_url('delete_address') }}?id={{ address.key().id() }}">Delete</a>
-        </td>
+        <th>Address</th>
+        <th>Callback url</th>
+        <th>Token</th>
+        <th></th>
       </tr>
-    {% end %}
-  </tbody>
-</table>
+    </thead>
+
+    <tbody>
+      {% for address in addresses %}
+        <tr>
+          <td>{{ address.address }}</td>
+          <td>{{ address.callback_url }}</td>
+          <td>{{ address.token }}</td>
+          <td>
+            <a href="{{ reverse_url('edit_address') }}?id={{ address.key().id() }}">Edit</a>
+            <a href="{{ reverse_url('delete_address') }}?id={{ address.key().id() }}">Delete</a>
+          </td>
+        </tr>
+      {% end %}
+    </tbody>
+  </table>
+  </div>
+</div>
+{% end %}

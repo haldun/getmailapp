@@ -150,12 +150,18 @@ class InboundHandler(BaseHandler):
       logging.info("Unknown address")
       return
 
+    # Save message
+    contents = message.original.as_string(True)
+    msg = models.Message(
+      account=address.account,
+      address=address,
+      raw_contents=contents,
+    )
+    msg.put()
+
     # Send the message to the callback_url
     taskqueue.add(url='/tasks/transmit_message',
-                  params={
-                    'address_key': address.key(),
-                    'message': message.original.as_string(True),
-                  })
+                  params={'message_key': msg.key()})
 
 
 class OutboundHandler(BaseHandler):
@@ -173,19 +179,26 @@ class TaskHandler(BaseHandler):
 
 class TransmitMessageHandler(TaskHandler):
   def post(self):
-    address = models.Address.get(self.get_argument('address_key'))
-    message = self.get_argument('message')
-    logging.info('Sending message to %s' % address.callback_url)
-    result = {'email': {'raw': message}}
+    message = models.Message.get(self.get_argument('message_key'))
+    address = message.address
+    result = {'email': {'raw': message.raw_contents}}
 
-    urlfetch.fetch(address.callback_url,
-                   payload=json.dumps(result),
-                   method='POST',
-                   headers={
-                     'Content-Type': 'application/json'
-                   },
-                   deadline=10)
-
+    try:
+      result = urlfetch.fetch(address.callback_url,
+                              payload=json.dumps(result),
+                              method='POST',
+                              headers={
+                               'Content-Type': 'application/json'
+                              },
+                              deadline=10)
+    except:
+      message.status = models.MessageState.FAILED
+    else:
+      if result.status_code == 200:
+        message.status = models.MessageState.SUCCESS
+      else:
+        message.status = models.MessageState.FAILED
+    message.put()
 
 
 def main():

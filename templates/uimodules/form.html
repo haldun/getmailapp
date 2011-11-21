@@ -1,6 +1,7 @@
 {% raw xsrf_form_html() %}
 <div class="inputs">
   {% for field in form %}
+    <div class="clearfix">
     <div class="input">
       {% raw field.label() %}
       {% raw field() %}
@@ -9,6 +10,7 @@
           <span class="error">{{ error }}</span>
         {% end %}
       {% end %}
+    </div>
     </div>
   {% end %}
 </div>

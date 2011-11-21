@@ -37,8 +37,14 @@ class Address(db.Model):
     super(Address, self).put()
 
 
+class MessageState(object):
+  WAITING = 1
+  SUCCESS = 2
+  FAILED = 3
+
 class Message(db.Model):
   account = db.ReferenceProperty(Account, collection_name='messages')
   address = db.ReferenceProperty(Address, collection_name='messages')
   raw_contents = db.TextProperty()
+  status = db.IntegerProperty(default=MessageState.WAITING)
   created_at = db.DateTimeProperty(auto_now_add=True)

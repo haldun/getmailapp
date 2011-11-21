@@ -15,8 +15,8 @@ class BaseForm(Form):
 
 
 class AddressForm(BaseForm):
-  address = TextField('address', [Required()])
-  callback_url = TextField('callback url', [Required()])
+  address = TextField('Address', [Required()])
+  callback_url = TextField('Callback URL', [Required()])
 
   def validate_address(self, field):
     if models.Address.all().filter('address =', field.data).count():
