@@ -1,0 +1,26 @@
+<h1>Listing Addresses</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Address</th>
+      <th>Callback url</th>
+      <th>Token</th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {% for address in addresses %}
+      <tr>
+        <td>{{ address.address }}</td>
+        <td>{{ address.callback_url }}</td>
+        <td>{{ address.token }}</td>
+        <td>
+          <a href="{{ reverse_url('edit_address') }}?id={{ address.key().id() }}">Edit</a>
+          <a href="{{ reverse_url('delete_address') }}?id={{ address.key().id() }}">Delete</a>
+        </td>
+      </tr>
+    {% end %}
+  </tbody>
+</table>
