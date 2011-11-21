@@ -36,6 +36,16 @@ class Address(db.Model):
     self.token = os.urandom(16).encode('hex')
     super(Address, self).put()
 
+  @property
+  def recent_messages(self):
+    if not hasattr(self, '_recent_messages'):
+      self._recent_messages = list(self.messages.order('-created_at').fetch(100))
+    return self._recent_messages
+
+  @property
+  def full_address(self):
+    return "%s@getmailapp.appspotmail.com" % self.address
+
 
 class MessageState(object):
   WAITING = 1
@@ -45,6 +55,8 @@ class MessageState(object):
 class Message(db.Model):
   account = db.ReferenceProperty(Account, collection_name='messages')
   address = db.ReferenceProperty(Address, collection_name='messages')
+  subject = db.StringProperty()
+  sender = db.StringProperty()
   raw_contents = db.TextProperty()
   status = db.IntegerProperty(default=MessageState.WAITING)
   created_at = db.DateTimeProperty(auto_now_add=True)

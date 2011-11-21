@@ -3,31 +3,53 @@
 {% block content %}
 <div class="content">
   <div class="page-header row">
-    <h1 class="pull-left">{{ address.address }}</h1>
+    <h1 class="pull-left">{{ address.address }}@getmailapp.appspotmail.com</h1>
     <a href="{{ reverse_url('new_address') }}" class="btn large success pull-right">+ Create Address</a>
   </div>
   <div>
-  <table>
-    <thead>
-      <tr>
-        <th></th>
-      </tr>
-    </thead>
+    <h2>Recent Messages</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Subject</th>
+          <th>From</th>
+          <th>Date</th>
+          <th></th>
+        </tr>
+      </thead>
 
-    <tbody>
+      <tbody>
       {% for message in messages %}
         <tr>
-          <td>{{ address.address }}</td>
-          <td>{{ address.callback_url }}</td>
-          <td>{{ address.token }}</td>
+          <td>{{ message.subject }}</td>
+          <td>{{ message.sender }}</td>
+          <td>{{ message.created_at }}</td>
           <td>
-            <a href="{{ reverse_url('edit_address') }}?id={{ address.key().id() }}">Edit</a>
-            <a href="{{ reverse_url('delete_address') }}?id={{ address.key().id() }}">Delete</a>
+            <a class="btn"
+               data-controls-modal="message-details-{{ message.key().id() }}"
+               data-backdrop="static">View Details</a>
+            <div id="message-details-{{ message.key().id() }}" class="modal hide">
+              <div class="modal-header">
+                <a href="#" class="close">&times;</a>
+                <h3>Message Details</h3>
+              </div>
+              <div class="modal-body">
+                <ul class="unstyled">
+                  <li><b>From:</b> {{ message.sender }}</li>
+                  <li><b>Subject:</b> {{ message.subject }}</li>
+                  <li><b>Date:</b> {{ message.created_at }}</li>
+                  <li><b>Raw:</b> <pre style="max-height:300px;overflow:auto">{{ message.raw_contents }}</pre></li>
+                </ul>
+              </div>
+              <div class="modal-footer">
+                <a href="#" class="btn primary">Close</a>
+              </div>
+            </div>
           </td>
         </tr>
       {% end %}
-    </tbody>
-  </table>
+      </tbody>
+    </table>
   </div>
 </div>
 {% end %}

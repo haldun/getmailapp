@@ -20,11 +20,12 @@
     <tbody>
       {% for address in addresses %}
         <tr>
-          <td>{{ address.address }}</td>
+          <td><a href="mailto:{{ address.full_address }}">{{ address.full_address }}</a></td>
           <td>{{ address.callback_url }}</td>
           <td>{{ address.token }}</td>
           <td>
-            <a href="{{ reverse_url('edit_address') }}?id={{ address.key().id() }}">Edit</a>
+            <a href="/addresses/{{ address.key().id() }}/messages">Recent Messages</a> •
+            <a href="{{ reverse_url('edit_address') }}?id={{ address.key().id() }}">Edit</a> •
             <a href="{{ reverse_url('delete_address') }}?id={{ address.key().id() }}">Delete</a>
           </td>
         </tr>

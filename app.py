@@ -156,6 +156,8 @@ class InboundHandler(BaseHandler):
     msg = models.Message(
       account=address.account,
       address=address,
+      subject=message.subject,
+      sender=message.sender,
       raw_contents=contents,
     )
     msg.put()
@@ -201,13 +203,14 @@ class TransmitMessageHandler(TaskHandler):
         message.status = models.MessageState.FAILED
     message.put()
 
+
 class ListMessagesHandlers(BaseHandler):
   @tornado.web.authenticated
   def get(self, id=None):
     address = models.Address.get_by_id(int(id))
     if address.account.key() != self.current_account.key():
       raise tornado.web.HTTPError(403)
-    self.render("list_messages.html", address=address, messages=address.messages)
+    self.render("list_messages.html", address=address, messages=address.recent_messages)
 
 
 def main():
