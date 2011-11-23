@@ -167,14 +167,6 @@ class InboundHandler(BaseHandler):
                   params={'message_key': msg.key()})
 
 
-class OutboundHandler(BaseHandler):
-  def initialize(self):
-    self.application.settings['xsrf_token'] = False
-
-  def post(self):
-    pass
-
-
 class TaskHandler(BaseHandler):
   def initialize(self):
     self.application.settings['xsrf_cookies'] = False
